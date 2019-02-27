@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
 @Component({
@@ -7,14 +7,16 @@ import { HttpClient } from "@angular/common/http";
   styleUrls: ["./nav.component.scss"]
 })
 export class NavComponent implements OnInit {
-  constructor(private http: HttpClient) {}
+  @Input() title: string;
 
+  constructor(private http: HttpClient) {}
+  
   ngOnInit() {}
 
-  onClick() {
-    var apiObservable = this.http.get("http://localhost:8080/api", {responseType: 'text'});
-    apiObservable.subscribe(data => {
-      console.log(data);
-    });
-  }
+  // onClick() {
+  //   var apiObservable = this.http.get("http://localhost:8080/api", {responseType: 'text'});
+  //   apiObservable.subscribe(data => {
+  //     console.log(data);
+  //   });
+  // }
 }
