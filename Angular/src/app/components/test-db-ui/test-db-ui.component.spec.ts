@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TestDbUiComponent } from './test-db-ui.component';
 
 describe('TestDbUiComponent', () => {

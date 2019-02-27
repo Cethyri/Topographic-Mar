@@ -2,16 +2,16 @@
   <div>
     <mat-form-field>
       <mat-label>Email</mat-label>
-      <input matInput placeholder="someone@domain.com" formControlName="email"/>
+      <input matInput type="email" placeholder="chris@portland.com" formControlName="email"/>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
       <mat-label>Password</mat-label>
-      <input type="password" matInput placeholder="password" formControlName="password"/>
+      <input type="password" matInput placeholder="password" minlength=6 formControlName="password"/>
     </mat-form-field>
   </div>
   <div>
-    <button mat-raised-button color="accent">Submit</button>
+    <button id="authorize" mat-raised-button color="accent">Submit</button>
   </div>
 </form>
