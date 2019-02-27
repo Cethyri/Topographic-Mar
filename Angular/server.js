@@ -1,41 +1,37 @@
-// Get dependencies
-const express = require('express');
-const path = require('path');
-const http = require('http');
-const bodyParser = require('body-parser');
+const express = require("express"),
+	path = require("path"),
+	http = require("http"),
+	bodyParser = require("body-parser"),
+	Logic = require("./server/library/Logic");
 
-// Get our API routes
-const api = require('./server/routes/api');
+const api = require("./server/routes/api");
 
 const app = express();
 
-// Parsers for POST data
+const cors = require("cors");
+var corsOptions = {
+	origin: "http://localhost:4200",
+	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Point static path to dist
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, "dist")));
 
-// Set our api routes
-app.use('/api', api);
+app.use("/api", api);
 
 // Catch all other routes and return the index file
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "dist/index.html"));
 });
 
-/**
- * Get port from environment and store in Express.
- */
-const port = process.env.PORT || '3000';
-app.set('port', port);
+const port = process.env.PORT || "8080";
+app.set("port", port);
 
-/**
- * Create HTTP server.
- */
 const server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
 server.listen(port, () => console.log(`API running on localhost:${port}`));
