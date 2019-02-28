@@ -14,10 +14,11 @@ import { SingleMapComponent } from './components/single-map/single-map.component
 import { TestCanvasComponent } from './components/test-canvas/test-canvas.component';
 import { TestDbUiComponent } from './components/test-db-ui/test-db-ui.component';
 
-import { ReactiveFormsModule } from '@angular/forms'
+import { ReactiveFormsModule } from '@angular/forms';
+import { UploadImageComponent } from './components/upload-image/upload-image.component'
 
 @NgModule({
-  declarations: [AppComponent, NavComponent, GalleryComponent, SingleMapComponent, TestCanvasComponent, TestDbUiComponent],
+  declarations: [AppComponent, NavComponent, GalleryComponent, SingleMapComponent, TestCanvasComponent, TestDbUiComponent, UploadImageComponent],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, AngularMaterialModule, HttpClientModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent]
