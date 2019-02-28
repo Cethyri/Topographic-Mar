@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-upload-image',
@@ -7,9 +8,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UploadImageComponent implements OnInit {
 
-  constructor() { }
+
+  uploadForm: FormGroup;
+  fileInput: HTMLInputElement;
+
+  constructor(fb: FormBuilder) {
+    this.uploadForm = fb.group({
+      image: ['']
+    })
+  }
 
   ngOnInit() {
+    this.fileInput = <HTMLInputElement>document.getElementById("fileInput");
+  }
+
+  onFileChanged(event) {
+    const file = event.target.files[0]
+    console.log(file);
+  }
+
+
+  public openFileDialog(): void {
+    let event = new MouseEvent('click', { bubbles: false });
+    this.fileInput.dispatchEvent(event);
   }
 
 }
