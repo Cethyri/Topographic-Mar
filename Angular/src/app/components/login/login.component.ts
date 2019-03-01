@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
-  selector: 'app-test-db-ui',
-  templateUrl: './test-db-ui.component.html',
-  styleUrls: ['./test-db-ui.component.scss']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class TestDbUiComponent implements OnInit {
+export class LoginComponent implements OnInit {
 
   userForm: FormGroup
 
