@@ -11,7 +11,7 @@ export class MapCanvasComponent implements OnInit {
 	ctx: CanvasRenderingContext2D;
 	img: HTMLImageElement;
 
-	constructor(http: HttpClient) {}
+	constructor(private http: HttpClient) {}
 
 	ngOnInit() {
 		this.canvas = <HTMLCanvasElement>document.getElementById("zach-test");
@@ -32,10 +32,15 @@ export class MapCanvasComponent implements OnInit {
 
 	addListener() {
 		var that = this;
-		this.canvas.addEventListener("mousemove", function(event) {
+		this.canvas.addEventListener("click", function(event) {
 			var pixelData = that.ctx.getImageData(event.offsetX, event.offsetY, 1, 1).data;
 			console.log(`X: ${event.offsetX}, Y: ${event.offsetY}`);
 			console.log("R: " + pixelData[0] + "  G: " + pixelData[1] + " B: " + pixelData[2] + " A: " + pixelData[3]);
+			var point = { x: event.offsetX, y: event.offsetY };
+			var observable = that.http.post("/api/canvas/xy", point, { responseType: "text" });
+			observable.subscribe(data => {
+				console.log(data);
+			});
 		});
 	}
 }
