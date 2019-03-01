@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import {TestCanvasComponent} from './components/test-canvas/test-canvas.component';
-import { TestDbUiComponent } from './components/test-db-ui/test-db-ui.component';
+import {MapCanvasComponent} from './components/map-canvas/map-canvas.component';
+import { LoginComponent } from './components/login/login.component';
+import { UploadImageComponent } from './components/upload-image/upload-image.component';
 
 const routes: Routes = [
-  { path: 'canvas', component: TestCanvasComponent },
-  { path: 'dbui', component: TestDbUiComponent }
+  { path: 'canvas', component: MapCanvasComponent },
+  { path: 'dbui', component: LoginComponent },
+  { path: 'upload', component: UploadImageComponent },
 ];
 
 @NgModule({
