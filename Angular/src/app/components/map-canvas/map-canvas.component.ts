@@ -40,12 +40,18 @@ export class MapCanvasComponent implements OnInit {
 			var imageDataAll = that.ctx.getImageData(0, 0, that.canvas.width, that.canvas.height);
 			that.imageTestData.next(imageDataAll);
 			//var pixelData = that.ctx.getImageData(event.offsetX, event.offsetY, 1, 1).data;
+			var pixelData = that.ctx.getImageData(event.offsetX, event.offsetY, 1, 1).data;
+			//var pixelData = that.ctx.getImageData(0, 0, that.canvas.width, that.canvas.height).data;
 			console.log(`X: ${event.offsetX}, Y: ${event.offsetY}`);
 			//console.log("R: " + pixelData[0] + "  G: " + pixelData[1] + " B: " + pixelData[2] + " A: " + pixelData[3]);
 			var point = { x: event.offsetX, y: event.offsetY };
-			var observable = that.http.post("/api/canvas/xy", point, { responseType: "text" });
+			var imgSize = { x: that.img.naturalWidth, y: that.img.naturalHeight };
+			var obj = { point: point, imgSize: imgSize };
+
+			var observable = that.http.post("/api/canvas/xy", obj, { responseType: "text" });
 			observable.subscribe(data => {
-				console.log(data);
+				// console.log(data);
+				that.img.src = data;
 			});
 		});
 	}
