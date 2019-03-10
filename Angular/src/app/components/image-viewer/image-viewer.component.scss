@@ -1,0 +1,28 @@
+#canvas {
+  position: absolute;
+  z-index: -1;
+  box-shadow: 0px 0px 0px 0px white;
+  transition: box-shadow .2s ease-in-out;
+}
+
+#canvas[moving] {
+  box-shadow: 0px 0px 10px 2px white;
+}
+
+#loading,
+#viewer {
+  overflow: hidden;
+  position: relative;
+  border-radius: 10px;
+  border: 1px solid black;
+  box-shadow: inset 0px 0px 5px 2px black;
+  box-sizing: border-box;
+}
+
+#viewer {
+  cursor: move;
+}
+.hidden,
+[hidden] {
+  display: none;
+}
