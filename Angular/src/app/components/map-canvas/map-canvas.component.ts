@@ -46,7 +46,7 @@ export class MapCanvasComponent implements OnInit {
 			//console.log("R: " + pixelData[0] + "  G: " + pixelData[1] + " B: " + pixelData[2] + " A: " + pixelData[3]);
 			var point = { x: event.offsetX, y: event.offsetY };
 			var imgSize = { x: that.img.naturalWidth, y: that.img.naturalHeight };
-			var obj = { point: point, imgSize: imgSize };
+			var obj = { point: point, imgSize: imgSize , threshold: 150};
 
 			var observable = that.http.post("/api/canvas/xy", obj, { responseType: "text" });
 			observable.subscribe(data => {
