@@ -1,2 +1,2 @@
 ng build
-gcloud app deploy
+gcloud app deploy --stop-previous-version

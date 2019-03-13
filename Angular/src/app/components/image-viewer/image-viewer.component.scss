@@ -1,15 +1,19 @@
-#canvas {
+#img-wrapper {
   position: absolute;
   z-index: -1;
   box-shadow: 0px 0px 0px 0px white;
   transition: box-shadow .2s ease-in-out;
 }
 
-#canvas[moving] {
+#img-wrapper[moving] {
   box-shadow: 0px 0px 10px 2px white;
 }
 
-#loading,
+#img {
+  display: block;
+}
+
+#loading-indicator,
 #viewer {
   overflow: hidden;
   position: relative;
@@ -17,11 +21,30 @@
   border: 1px solid black;
   box-shadow: inset 0px 0px 5px 2px black;
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 }
 
 #viewer {
   cursor: move;
 }
+
+#loading-indicator {
+  pointer-events: none;
+  background-color: #00000044;
+  opacity: 0;
+  transition: opacity .25s ease-in-out;
+}
+
+.loading #loading-indicator {
+  display: block;
+  opacity: 1;
+}
+
+.loading .loading-spinner {
+  pointer-events: none;
+}
+
 .hidden,
 [hidden] {
   display: none;

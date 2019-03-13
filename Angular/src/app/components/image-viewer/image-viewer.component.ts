@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Observable, interval } from "rxjs";
 import { Vector } from "../../classes/vector";
 import { Interpolation } from "../../classes/interpolation";
+import { wrappedError } from "@angular/core/src/error_handler";
 
 @Component({
   selector: "app-image-viewer",
@@ -9,7 +10,7 @@ import { Interpolation } from "../../classes/interpolation";
   styleUrls: ["./image-viewer.component.scss"]
 })
 export class ImageViewerComponent implements OnInit {
-  @Input() imageSource$: Observable<ImageData>;
+  @Input() imageSource$: Observable<string>;
   @Input() width: number;
   @Input() height: number;
 
@@ -17,16 +18,16 @@ export class ImageViewerComponent implements OnInit {
 
   hasData = false;
 
-  canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
+  img: HTMLImageElement;
+  wrapper: HTMLDivElement;
   viewer: HTMLDivElement;
-  loading: HTMLDivElement;
+  loadingIndicator: HTMLDivElement;
 
   imageData: ImageData;
 
   viewerCenter: Vector;
 
-  canvasHalfSize: Vector;
+  canvasHalfSize = new Vector();
   shift: Vector;
   position = new Vector();
   velocity = new Vector();
@@ -58,26 +59,33 @@ export class ImageViewerComponent implements OnInit {
 
   mouseStartPosition: Vector;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
-    this.canvas = <HTMLCanvasElement>document.getElementById("canvas");
-    this.ctx = this.canvas.getContext("2d");
+    this.img = <HTMLImageElement>document.getElementById("img");
+    this.wrapper = <HTMLDivElement>document.getElementById("img-wrapper");
     this.viewer = <HTMLDivElement>document.getElementById("viewer");
-    this.loading = <HTMLDivElement>document.getElementById("loading");
+    this.loadingIndicator = <HTMLDivElement>(
+      document.getElementById("loading-indicator")
+    );
 
+    this.width = this.width || this.viewer.clientWidth;
+    this.height = this.height || this.viewer.clientHeight;
     this.viewerCenter = new Vector(this.width, this.height).div(2);
     this.viewer.style.width = `${this.width}px`;
     this.viewer.style.height = `${this.height}px`;
 
-    this.loading.style.width = `${this.width}px`;
-    this.loading.style.height = `${this.height}px`;
-    this.loading.style.padding = `${(this.height - 100) / 2}px ${(this.width - 100) / 2}px`;
+    this.loadingIndicator.style.width = `${this.width}px`;
+    this.loadingIndicator.style.height = `${this.height}px`;
+    this.loadingIndicator.style.padding = `${(this.height - 100) / 2}px ${(this
+      .width -
+      100) /
+      2}px`;
 
     this.velocityDieDown = {
       t: 0,
       start: new Vector()
-    }
+    };
 
     this.timer.subscribe(() => {
       this.timerMethod();
@@ -87,7 +95,7 @@ export class ImageViewerComponent implements OnInit {
   }
 
   timerMethod() {
-    if (!this.hasData) {
+    if (!this.img.src) {
       return;
     }
 
@@ -109,32 +117,32 @@ export class ImageViewerComponent implements OnInit {
 
     var canvasCenter = this.getCanvasCenter();
 
-    if (this.canvas.width < this.viewer.clientWidth) {
+    if (this.img.width < this.viewer.clientWidth) {
       correction.x = this.viewerCenter.x - canvasCenter.x;
     } else if (this.position.x > threshold) {
       correction.x = threshold - this.position.x;
     } else if (
-      this.position.x + this.canvas.width <
+      this.position.x + this.img.width <
       this.viewerCenter.x * 2 - threshold
     ) {
       correction.x =
         this.viewerCenter.x * 2 -
         threshold -
-        (this.position.x + this.canvas.width);
+        (this.position.x + this.img.width);
     }
 
-    if (this.canvas.height < this.viewer.clientHeight) {
+    if (this.img.height < this.viewer.clientHeight) {
       correction.y = this.viewerCenter.y - canvasCenter.y;
     } else if (this.position.y > threshold) {
       correction.y = threshold - this.position.y;
     } else if (
-      this.position.y + this.canvas.height <
+      this.position.y + this.img.height <
       this.viewerCenter.y * 2 - threshold
     ) {
       correction.y =
         this.viewerCenter.y * 2 -
         threshold -
-        (this.position.y + this.canvas.height);
+        (this.position.y + this.img.height);
     }
 
     return correction.mult(1);
@@ -146,7 +154,11 @@ export class ImageViewerComponent implements OnInit {
 
   slide(dt: number) {
     var correctionVector = this.getCorrectionVelocity(50);
-    if ((Math.abs(correctionVector.x) > this.threshold || Math.abs(correctionVector.y) > this.threshold) && !this.correction) {
+    if (
+      (Math.abs(correctionVector.x) > this.threshold ||
+        Math.abs(correctionVector.y) > this.threshold) &&
+      !this.correction
+    ) {
       this.correction = {
         t: new Vector(),
         start: new Vector(this.position.x, this.position.y),
@@ -182,7 +194,7 @@ export class ImageViewerComponent implements OnInit {
         correctionPosition.x =
           this.correction.start.x +
           this.correction.vector.x *
-          Interpolation.cubicInOut(this.correction.t.x);
+            Interpolation.cubicInOut(this.correction.t.x);
       }
 
       if (correctY) {
@@ -193,20 +205,8 @@ export class ImageViewerComponent implements OnInit {
         correctionPosition.y =
           this.correction.start.y +
           this.correction.vector.y *
-          Interpolation.cubicInOut(this.correction.t.y);
+            Interpolation.cubicInOut(this.correction.t.y);
       }
-
-      // console.log(`Position: ${this.position.x}, ${this.position.y}`);
-      // console.log(
-      //   `NewPosition: ${correctionPosition.x}, ${correctionPosition.y}`
-      // );
-      // console.log(
-      //   `Correction: time:${this.correction.time}, t:${this.correction.t.x}, ${
-      //     this.correction.t.y
-      //   }, start:${this.correction.start.x}, ${
-      //     this.correction.start.y
-      //   }, vector:${this.correction.vector.x}, ${this.correction.vector.y}`
-      // );
 
       this.setPosition(correctionPosition);
 
@@ -229,39 +229,54 @@ export class ImageViewerComponent implements OnInit {
     } else {
       this.velocity = new Vector();
       if (correctionVector.x === 0 && correctionVector.y === 0) {
-        this.canvas.removeAttribute("moving");
+        this.wrapper.removeAttribute("moving");
       }
     }
   }
 
-  updateImageSource(data: ImageData) {
-    if (!data) {
-      this.hasData = false;
-      return;
+  updateImageSource(data: string) {
+    this.hasData = false;
+    if (data) {
+      let pseudoImg = document.createElement("img");
+      pseudoImg.src = data;
+      pseudoImg.onload = () => {
+        this.hasData = true;
+        this.img.src = data;
+        this.img.removeAttribute("hidden");
+
+        let newHalfSize = new Vector(pseudoImg.width, pseudoImg.height).mult(
+          0.5
+        );
+        if (
+          this.canvasHalfSize.x != newHalfSize.x ||
+          this.canvasHalfSize.y != newHalfSize.y
+        ) {
+          this.canvasHalfSize = newHalfSize;
+
+          this.img.width = pseudoImg.width;
+          this.img.height = pseudoImg.height;
+
+          this.scale = 1;
+
+          this.setPosition(this.viewerCenter.sub(this.canvasHalfSize));
+        }
+      };
     } else {
-      this.hasData = true;
+      this.img.src = "";
+      this.img.setAttribute("hidden", "");
+
+      this.canvasHalfSize = new Vector();
+
+      this.img.width = 0;
+      this.img.height = 0;
+
+      this.scale = 1;
+
+      this.setPosition(this.viewerCenter.sub(this.canvasHalfSize));
     }
-
-    this.imageData = data;
-
-    this.canvas.width = data.width;
-    this.canvas.height = data.height;
-
-    this.canvasHalfSize = new Vector(
-      this.canvas.width,
-      this.canvas.height
-    ).mult(0.5);
-
-    this.scale = 1;
-
-    this.setPosition(this.viewerCenter.sub(this.canvasHalfSize));
-
-    this.ctx.clearRect(0, 0, data.width, data.height);
-    this.ctx.putImageData(data, 0, 0);
   }
 
   handleMouseEvent(event: MouseEvent) {
-
     this.mousePosition = new Vector(event.offsetX, event.offsetY);
 
     switch (event.type) {
@@ -269,16 +284,25 @@ export class ImageViewerComponent implements OnInit {
       case "mouseenter":
         if (event.buttons) {
           this.clicked = true;
-          this.canvas.setAttribute("moving", "");
+          this.wrapper.setAttribute("moving", "");
           this.lastMousePosition = this.mousePosition;
           this.mouseStartPosition = this.mousePosition;
           this.shift = this.mousePosition.sub(this.position);
         }
         break;
       case "mouseup":
-        if (this.mouseStartPosition.x == this.mousePosition.x && this.mouseStartPosition.y == this.mousePosition.y) {
-          var clickPosition = this.mousePosition.sub(this.position).div(this.scale);
-          var clickPosition = new Vector(Math.round(clickPosition.x), Math.round(clickPosition.y))
+        if (
+          this.hasData &&
+          this.mouseStartPosition.dist(this.mousePosition) < 5
+        ) {
+          var clickPosition = this.mousePosition
+            .sub(this.position)
+            .div(this.scale);
+          var clickPosition = new Vector(
+            Math.round(clickPosition.x),
+            Math.round(clickPosition.y)
+          );
+          this.hasData = false;
           this.onClick.emit(clickPosition);
         }
       case "mouseout":
@@ -302,8 +326,8 @@ export class ImageViewerComponent implements OnInit {
 
   setPosition(newPos: Vector) {
     this.position = newPos;
-    this.canvas.style.left = `${this.position.x}px`;
-    this.canvas.style.top = `${this.position.y}px`;
+    this.wrapper.style.left = `${this.position.x}px`;
+    this.wrapper.style.top = `${this.position.y}px`;
   }
 
   onScroll(event: WheelEvent) {
@@ -311,46 +335,31 @@ export class ImageViewerComponent implements OnInit {
     this.correction = null;
 
     var oldScale = this.scale;
-    this.scale *= Math.pow(this.zoomCoefficient, event.deltaY / this.zoomDeltaDamper);
+    this.scale *= Math.pow(
+      this.zoomCoefficient,
+      event.deltaY / this.zoomDeltaDamper
+    );
 
-    if (this.scale < 0.5) {
-      this.scale = 0.5;
+    let minHeightScale = (this.height - 100) / (this.canvasHalfSize.y * 2);
+    let minWidthScale = (this.width - 100) / (this.canvasHalfSize.x * 2);
+
+    let minScale = Math.min(minHeightScale, minWidthScale, 1);
+
+    if (this.scale < minScale) {
+      this.scale = minScale;
     }
 
-    if (this.scale > 8) {
-      this.scale = 8;
+    if (this.scale > 16) {
+      this.scale = 16;
     }
 
-    this.canvas.width = this.canvasHalfSize.x * 2 * this.scale;
-    this.canvas.height = this.canvasHalfSize.y * 2 * this.scale;
-
-    var scaled = this.scaleImageData(this.imageData, this.scale);
-    this.ctx.putImageData(scaled, 0, 0);
+    this.img.width = this.canvasHalfSize.x * 2 * this.scale;
+    this.img.height = this.canvasHalfSize.y * 2 * this.scale;
 
     var zoomCenter = new Vector(event.offsetX, event.offsetY);
-    var zoomCenterToPosition = this.position.sub(zoomCenter).mult(this.scale / oldScale);
+    var zoomCenterToPosition = this.position
+      .sub(zoomCenter)
+      .mult(this.scale / oldScale);
     this.setPosition(zoomCenter.add(zoomCenterToPosition));
-  }
-
-  scaleImageData(imageData: ImageData, scale: number): ImageData {
-    var newCanvas = document.createElement("canvas");
-    newCanvas.width = imageData.width;
-    newCanvas.height = imageData.height;
-
-    newCanvas.getContext("2d").putImageData(imageData, 0, 0);
-
-    // Second canvas, for scaling
-    var scaleCanvas = document.createElement("canvas");
-    scaleCanvas.width = this.canvas.width;
-    scaleCanvas.height = this.canvas.height;
-
-    var scaleCtx = scaleCanvas.getContext("2d");
-
-    scaleCtx.scale(scale, scale);
-    scaleCtx.drawImage(newCanvas, 0, 0);
-
-    var scaledImageData = scaleCtx.getImageData(0, 0, scaleCanvas.width, scaleCanvas.height);
-
-    return scaledImageData;
   }
 }

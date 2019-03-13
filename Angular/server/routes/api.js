@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/test-image", (req, res) => {
-	res.sendFile(path.join(__dirname, "../../images/simplerbg.png"));
+	res.sendFile(path.join(__dirname, "../../images/tester.jpg"));
 });
 
 // // Draw line under text
@@ -56,7 +56,7 @@ router.post("/canvas/xy", urlencodedParser, (req, res) => {
 	const canvas = createCanvas(req.body.imgSize.x, req.body.imgSize.y);
 	ctx = canvas.getContext("2d");
 
-	loadImage("./images/simplerbg.png")
+	loadImage("./images/tester.jpg")
 		.then(imag => {
 			img = imag;
 			//console.log("loaded");

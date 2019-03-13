@@ -1,3 +1,2 @@
-<canvas id="zach-test"></canvas>
-<app-image-viewer [imageSource$]="imageTestData" [width]=400 [height]=400></app-image-viewer>
+<app-image-viewer class="viewer" [imageSource$]="imageTestData" (onClick)="onClick($event)"></app-image-viewer>
 <img id="image" />

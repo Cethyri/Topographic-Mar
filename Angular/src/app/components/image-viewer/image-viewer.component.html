@@ -1,8 +1,17 @@
-<div [ngClass]="this.hasData ? '' : 'hidden'" id="viewer" (mousedown)="handleMouseEvent($event)"
-    (mouseup)="handleMouseEvent($event)" (mousemove)="onMove($event)" (mouseout)="handleMouseEvent($event)"
-    (mouseenter)="handleMouseEvent($event)" (mousewheel)="onScroll($event)">
-    <canvas id="canvas"></canvas>
-</div>
-<div [ngClass]="this.hasData ? 'hidden' : ''" id="loading">
-    <mat-spinner class="center" mode="indeterminate"></mat-spinner>
+<div
+  [ngClass]="this.hasData ? '' : 'loading'"
+  id="viewer"
+  (mousedown)="handleMouseEvent($event)"
+  (mouseup)="handleMouseEvent($event)"
+  (mousemove)="onMove($event)"
+  (mouseout)="handleMouseEvent($event)"
+  (mouseenter)="handleMouseEvent($event)"
+  (mousewheel)="onScroll($event)"
+>
+  <div id="img-wrapper">
+    <img id="img" />
+  </div>
+  <div id="loading-indicator">
+      <mat-spinner class="loading-spinner" mode="indeterminate"></mat-spinner>
+  </div>
 </div>
