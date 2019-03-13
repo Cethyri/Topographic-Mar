@@ -22,11 +22,7 @@ import { ImageViewerComponent } from './components/image-viewer/image-viewer.com
 import { LineEditorComponentComponent } from './components/line-editor-component/line-editor-component.component'
 
 @NgModule({
-  declarations: [AppComponent, NavComponent, GalleryComponent, SingleMapComponent, MapCanvasComponent, LoginComponent, UploadImageComponent, HomeComponent, RegisterComponent],
-}
-
-@NgModule({
-  declarations: [AppComponent, NavComponent, GalleryComponent, SingleMapComponent, MapCanvasComponent, LoginComponent, UploadImageComponent, ImageViewerComponent, LineEditorComponentComponent],
+  declarations: [AppComponent, NavComponent, GalleryComponent, SingleMapComponent, MapCanvasComponent, LoginComponent, UploadImageComponent, HomeComponent, RegisterComponent, ImageViewerComponent, LineEditorComponentComponent],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, AngularMaterialModule, HttpClientModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent]
