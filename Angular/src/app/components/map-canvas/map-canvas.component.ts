@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Subject } from 'rxjs';
+import { Subject } from "rxjs";
 
 @Component({
 	selector: "app-map-canvas",
@@ -11,7 +11,7 @@ export class MapCanvasComponent implements OnInit {
 	canvas: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
 	img: HTMLImageElement;
-	imageTestData: Subject<ImageData>
+	imageTestData: Subject<ImageData>;
 
 	constructor(private http: HttpClient) {}
 
@@ -26,7 +26,7 @@ export class MapCanvasComponent implements OnInit {
 			console.log("loaded");
 			that.canvas.width = that.img.width;
 			that.canvas.height = that.img.height;
-			
+
 			that.ctx.drawImage(that.img, 0, 0, that.canvas.width, that.canvas.height);
 			//that.imageTestData.next(that.ctx.getImageData(0, 0, that.canvas.width, that.canvas.height));
 		};
@@ -46,12 +46,12 @@ export class MapCanvasComponent implements OnInit {
 			//console.log("R: " + pixelData[0] + "  G: " + pixelData[1] + " B: " + pixelData[2] + " A: " + pixelData[3]);
 			var point = { x: event.offsetX, y: event.offsetY };
 			var imgSize = { x: that.img.naturalWidth, y: that.img.naturalHeight };
-			var obj = { point: point, imgSize: imgSize , threshold: 150};
+			var obj = { point: point, imgSize: imgSize, threshold: 150 };
 
 			var observable = that.http.post("/api/canvas/xy", obj, { responseType: "text" });
 			observable.subscribe(data => {
 				// console.log(data);
-				that.img.src = data;
+				that.imageTestData.next(<ImageData>JSON.parse(data));
 			});
 		});
 	}
