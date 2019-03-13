@@ -15,10 +15,12 @@ import { MapCanvasComponent } from './components/map-canvas/map-canvas.component
 import { LoginComponent } from './components/login/login.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { UploadImageComponent } from './components/upload-image/upload-image.component'
+import { UploadImageComponent } from './components/upload-image/upload-image.component';
+import { HomeComponent } from './components/home/home.component';
+import { RegisterComponent } from './components/register/register.component'
 
 @NgModule({
-  declarations: [AppComponent, NavComponent, GalleryComponent, SingleMapComponent, MapCanvasComponent, LoginComponent, UploadImageComponent],
+  declarations: [AppComponent, NavComponent, GalleryComponent, SingleMapComponent, MapCanvasComponent, LoginComponent, UploadImageComponent, HomeComponent, RegisterComponent],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, AngularMaterialModule, HttpClientModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent]

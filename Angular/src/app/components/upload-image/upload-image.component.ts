@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-upload-image',
@@ -12,7 +13,7 @@ export class UploadImageComponent implements OnInit {
   uploadForm: FormGroup;
   fileInput: HTMLInputElement;
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder, public firebaseService: FirebaseService) {
     this.uploadForm = fb.group({
       image: ['']
     })
@@ -23,13 +24,14 @@ export class UploadImageComponent implements OnInit {
   }
 
   onFileChanged(event) {
-    const file = event.target.files[0]
+    const file = event.target.files[0];
     console.log(file);
-    // Get a reference to the storage service, which is used to create references in your storage bucket
-    var storage = firebase.storage();
-
-    // Create a storage reference from our storage service
-    var storageRef = storage.ref();
+    let storage = this.firebaseService.firebase.storage();
+    let storageRef = storage.ref();
+    let fileRef = storageRef.child(file.name);
+    fileRef.put(file).then(function(snapshot) {
+      console.log("Uploaded file!");
+    })
   }
 
 
