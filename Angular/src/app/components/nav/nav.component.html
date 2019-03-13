@@ -1,14 +1,18 @@
 <nav>
-  <a routerLink="/">
-    <button mat-raised-button color="primary">{{ title }}!</button>
+  <a routerLink="/"
+    ><button mat-raised-button color="primary">About</button></a
+  >
+  <a routerLink="/canvas"
+  ><button mat-raised-button color="primary">Maps</button></a
+>
+  <a id="login" routerLink="/join"
+    ><button mat-raised-button color="accent">Join</button></a
+  >
+  <a id="upload" routerLink="/storage"
+    ><button mat-raised-button color="accent">Storage</button>
   </a>
-  <a routerLink="/dbui">
-    <button mat-raised-button color="accent">Login</button>
+  <a>
+    <button id="logout" mat-button color="accent">Leave</button>
   </a>
-  <a routerLink="/canvas">
-    <button mat-raised-button color="accent">Test Canvas</button>
-  </a>
-  <a routerLink="/upload">
-    <button mat-raised-button color="accent">Upload</button>
-  </a>
+  <p id="username"></p>
 </nav>
