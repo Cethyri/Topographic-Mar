@@ -8,10 +8,12 @@
   (mouseenter)="handleMouseEvent($event)"
   (mousewheel)="onScroll($event)"
 >
-  <div id="img-wrapper">
-    <img id="img" />
-  </div>
-  <div id="loading-indicator">
+  <div class="goggle-background">
+    <div id="img-wrapper">
+      <img id="img" />
+    </div>
+    <div id="loading-indicator">
       <mat-spinner class="loading-spinner" mode="indeterminate"></mat-spinner>
+    </div>
   </div>
 </div>

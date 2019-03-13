@@ -131,7 +131,7 @@ router.post("/canvas/xy", urlencodedParser, (req, res) => {
 			//have this stored before I send it back, use it in the next time its called
 			var dat = canvas.toDataURL();
 			//	console.log(dat);
-			res.send(JSON.stringify(imgData));
+			res.send(dat);
 		})
 		.catch(err => {
 			console.log(err);

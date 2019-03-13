@@ -13,19 +13,26 @@
   display: block;
 }
 
+.goggle-background,
 #loading-indicator,
 #viewer {
   overflow: hidden;
   position: relative;
   border-radius: 10px;
   border: 1px solid black;
-  box-shadow: inset 0px 0px 5px 2px black;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
 }
 
+.goggle-background {
+  z-index: -2;
+  background-color: #0044ff44;
+}
+
 #viewer {
+  box-shadow: inset 0px 0px 5px 2px black;
+  margin: auto;
   cursor: move;
 }
 
